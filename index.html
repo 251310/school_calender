@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학교 행사 아카이브</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; margin:0; padding:0; }
+  #calendar table { border-collapse: collapse; margin: auto; width: 100%; max-width: 700px; }
+  #calendar th, #calendar td {
+    border: 1px solid #ccc; width: 14%; height: 80px;
+    vertical-align: top; text-align: left; padding: 5px; background: white;
+    box-sizing: border-box;
+  }
+  #calendar th { background: #f0f0f0; text-align: center; }
+  .saturday { color: #0000CC; }
+  .sunday, .holiday { color: #CC0000; }
+  .event-preview { display: block; font-size: 10px; color: #444; margin-top: 2px; }
+  #event-details {
+    margin-top: 20px; border: 1px solid #ccc; padding: 10px;
+    width: 90%; max-width: 700px; margin-left: auto; margin-right: auto;
+    box-sizing: border-box;
+  }
+  #year-select {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #fff; display: flex; justify-content: center; align-items: center;
+    flex-direction: column; z-index: 1000; padding: 0 10px; box-sizing: border-box;
+  }
+  #year-select h1 { font-size: 32px; margin-bottom: 20px; }
+  #year-select h2 { margin-bottom: 10px; color: #999; }
+  #year-select button { margin: 5px; padding: 10px 20px; font-size: 18px; min-width: 80px; }
+
+  /* 달력 컨트롤 */
+  #calendar-container { display: none; }
+  #calendar-title { font-size: 28px; margin: 15px 0; }
+  #calendar-controls {
+    display: flex; justify-content: center; align-items: center; position: relative;
+    width: 90%; max-width: 800px; margin: 0 auto 10px auto;
+  }
+  #back-button {
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    background-color: #f0f0f0; border: 1px solid #aaa; color: #333;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer;
+  }
+  #back-button:hover { background-color: #e0e0e0; }
+  #month-controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 0 auto; }
+  #current-month { font-weight: bold; min-width: 80px; text-align: center; }
+  #hint { font-size: 12px; color: #666; margin: 8px; }
+
+  /* 반응형 */
+  @media (max-width: 500px) {
+    #calendar-controls { flex-direction: column; }
+    #back-button { position: static; transform: none; margin-bottom: 5px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 달력 화면 -->
+<div id="calendar-container">
+  <div id="calendar-title">학교 행사 아카이브</div>
+  <div id="calendar-controls">
+    <button id="back-button" onclick="backToYearSelect()">뒤로가기</button>
+    <div id="month-controls">
+      <button onclick="prevMonth()">◀ 이전 달</button>
+      <span id="current-month">2023년 1월</span>
+      <button onclick="nextMonth()">다음 달 ▶</button>
+    </div>
+  </div>
+  <div id="hint">날짜를 누르면 자세히 볼 수 있어요!</div>
+  <div id="calendar"></div>
+
+  <div id="event-details">
+    <h2>행사 정보</h2>
+    <div id="event-content">날짜를 클릭하면 행사가 표시됩니다.</div>
+  </div>
+</div>
+
+<!-- 연도 선택 화면 -->
+<div id="year-select">
+  <h1>학교 행사 아카이브</h1>
+  <h2>연도를 선택해주세요</h2>
+  <button onclick="chooseYear(2023)">2023</button>
+  <button onclick="chooseYear(2024)">2024</button>
+  <button onclick="chooseYear(2025)">2025</button>
+  <button onclick="chooseYear(2026)">2026</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
