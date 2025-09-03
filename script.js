@@ -122,8 +122,14 @@ const events = {
 "2025-7-29": { displayText:"", title:"여름방학", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
 "2025-7-30": { displayText:"", title:"여름방학", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
 "2025-7-31": { displayText:"", title:"여름방학", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
-
-"2025-8-8": { displayText:"여름방학", title:"여름방학", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-1": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-2": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-3": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-4": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-5": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-6": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-7": { displayText:"", title:"", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
+"2025-8-8": { displayText:"", title:"여름방학", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
 "2025-8-5": { displayText:"전야제", title:"전야제", img:"", desc:"", textColor:"#CC6600", borderColor:"#FF9933" },
 "2025-8-11": { displayText:"개학", title:"개학식", img:"", desc:"", textColor:"#006600", borderColor:"#00CC00" },
 "2025-9-3": { displayText:"9월평가", title:"9월전국연합학력평가", img:"", desc:"", textColor:"#0066CC", borderColor:"#00CCFF" },
@@ -303,3 +309,4 @@ function renderCalendar(){
 
   calendar.appendChild(table);
 }
+
