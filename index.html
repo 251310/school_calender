@@ -24,21 +24,14 @@ body {
   text-shadow: 1px 1px 2px rgba(255, 77, 109, 0.2);
 }
 
-/* 달력 컨트롤 버튼 */
+/* 달력 컨트롤 전체 */
 #calendar-controls {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* 세로 정렬 */
+  align-items: center;    /* 가운데 정렬 */
   width: 90%;
   max-width: 800px;
   margin: 0 auto 12px auto;
-  flex-wrap: wrap; /* 모바일에서 줄 바꿈 가능 */
-}
-
-/* 뒤로가기 버튼 컨테이너 */
-#back-container {
-  flex: 0 0 auto;
-  margin-bottom: 8px;
 }
 
 /* 뒤로가기 버튼 */
@@ -46,11 +39,12 @@ body {
   background: #ff4d6d;
   border: none;
   color: #fff;
-  padding: 6px 14px;
-  border-radius: 8px;
+  padding: 6px 12px; 
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
+  margin-bottom: 10px;
   transition: background 0.2s ease, transform 0.15s ease;
 }
 #back-button:hover {
@@ -58,22 +52,23 @@ body {
   transform: scale(1.05);
 }
 
-/* 월 컨트롤 */
+/* 월 컨트롤 (이전달 / 월 / 다음달) */
 #month-controls {
   display: flex;
-  justify-content: center;
+  justify-content: center; 
   align-items: center;
   gap: 10px;
-  flex-grow: 1;
+  flex-wrap: wrap; /* 모바일에서 줄바꿈 가능 */
 }
+
 #month-controls button {
   background: #ff4d6d;
   border: none;
   color: #fff;
-  padding: 6px 14px;
-  border-radius: 8px;
+  padding: 6px 12px; 
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 14px;   
   font-weight: bold;
   transition: background 0.2s ease, transform 0.15s ease;
 }
@@ -81,13 +76,15 @@ body {
   background: #e63950;
   transform: scale(1.05);
 }
+
 #current-month {
   font-weight: bold;
   font-size: 16px;
   color: #333;
+  margin: 5px 0;
 }
 
-/* 달력 박스 */
+/* 달력 테이블 */
 #calendar table {
   border-collapse: collapse;
   margin: auto;
@@ -126,6 +123,8 @@ body {
   cursor: pointer;
   border-radius: 8px;
 }
+
+/* 토요일, 일요일 */
 .saturday { color: #5c7cfa; font-weight: bold; }
 .sunday, .holiday { color: #ff4d6d; font-weight: bold; }
 
@@ -159,7 +158,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* 안내 텍스트 */
+/* 힌트 문구 */
 #hint {
   font-size: 12px;
   color: #777;
@@ -203,15 +202,21 @@ body {
   background: #e63950;
 }
 
-/* 모바일 대응 */
+/* 반응형 조정 */
 @media (max-width: 500px) {
-  #calendar-controls {
-    flex-direction: column;
-    align-items: center;
+  #back-button, #month-controls button {
+    padding: 4px 8px;
+    font-size: 12px;
   }
-  #back-container {
-    align-self: flex-start;
-    margin-bottom: 6px;
+  #current-month {
+    font-size: 14px;
+  }
+  #calendar td {
+    height: 60px;
+    padding: 4px;
+  }
+  #calendar th {
+    font-size: 12px;
   }
 }
 </style>
@@ -221,14 +226,9 @@ body {
 <!-- 달력 화면 -->
 <div id="calendar-container">
   <div id="calendar-title">ON-AIR 학교 행사 캘린더</div>
-
+  
   <div id="calendar-controls">
-    <!-- 뒤로가기 -->
-    <div id="back-container">
-      <button id="back-button" onclick="backToYearSelect()">뒤로가기</button>
-    </div>
-
-    <!-- 이전/다음 달 -->
+    <button id="back-button" onclick="backToYearSelect()">뒤로가기</button>
     <div id="month-controls">
       <button onclick="prevMonth()">◀ 이전 달</button>
       <span id="current-month">2023년 1월</span>
