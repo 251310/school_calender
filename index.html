@@ -36,8 +36,8 @@ body {
 
 /* 뒤로가기 버튼 */
 #back-button {
-  background: #fff;        /* 흰색 배경 */
-  color: #777;             /* 글자 회색 */
+  background: #fff;        
+  color: #777;             
   padding: 4px 10px;
   font-size: 12px;
   border-radius: 6px;
@@ -58,7 +58,7 @@ body {
   justify-content: center; 
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap; /* 모바일에서 줄바꿈 가능 */
+  flex-wrap: wrap;
 }
 
 #month-controls button {
@@ -80,7 +80,7 @@ body {
 /* 현재 연월 표시 */
 #current-month {
   font-weight: bold;
-  font-size: 24px;       /* 글씨 키움 */
+  font-size: 24px;       
   color: #333;
   margin: 5px 0;
 }
@@ -132,7 +132,7 @@ body {
 /* 달력 안의 행사 미리보기 */
 .event-preview {
   display: block;
-  font-size: 11px;
+  font-size: 11px; /* 기본 크기 (태블릿, 노트북에서 사용) */
   color: #444;
   margin-top: 4px;
   padding: 2px 4px;
@@ -204,20 +204,29 @@ body {
 }
 
 /* 반응형 조정 */
-@media (max-width: 500px) {
-  #back-button, #month-controls button {
-    padding: 4px 8px;
+/* 모바일(세로)에서만 날짜 안 행사 이름 글씨 줄이기 */
+@media (max-width: 500px) and (orientation: portrait) {
+  #back-button {
+    padding: 4px 10px;
     font-size: 12px;
   }
   #current-month {
-    font-size: 20px;
+    font-size: 24px; /* 유지 */
   }
   #calendar td {
     height: 60px;
     padding: 4px;
   }
-  #calendar th {
-    font-size: 12px;
+  .event-preview {
+    font-size: 9px; /* 모바일에서만 줄임 */
+  }
+}
+
+/* 모바일에서도 이전/다음 버튼 크기 유지 */
+@media (max-width: 500px) {
+  #month-controls button {
+    font-size: 14px; /* 기존 크기 유지 */
+    padding: 6px 12px;
   }
 }
 </style>
