@@ -27,8 +27,8 @@ body {
 /* 달력 컨트롤 전체 */
 #calendar-controls {
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  align-items: center;    /* 가운데 정렬 */
+  flex-direction: column;
+  align-items: center;
   width: 90%;
   max-width: 800px;
   margin: 0 auto 12px auto;
@@ -36,10 +36,10 @@ body {
 
 /* 뒤로가기 버튼 */
 #back-button {
-  background: #fff;      /* 흰색 배경 */
-  color: #666;           /* 글자 회색 */
-  padding: 4px 10px;
-  font-size: 12px;
+  background: #fff;       /* 배경 흰색 */
+  color: #666;            /* 글자 회색 */
+  padding: 5px 12px;
+  font-size: 13px;
   border-radius: 6px;
   border: 1px solid #ccc;
   cursor: pointer;
@@ -48,27 +48,28 @@ body {
   transition: background 0.2s ease, transform 0.15s ease;
 }
 #back-button:hover {
-  background: #f5f5f5;
+  background: #f2f2f2;
   transform: scale(1.05);
 }
 
-/* 월 컨트롤 (이전달 / 월 / 다음달) */
+/* 월 컨트롤 */
 #month-controls {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap; /* 모바일 줄바꿈 */
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
+/* 이전/다음달 버튼 */
 #month-controls button {
   background: #ff4d6d;
   border: none;
   color: #fff;
-  padding: 6px 12px; 
+  padding: 5px 10px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;   /* 버튼 글씨 크기 유지 */
+  font-size: 14px;
   font-weight: bold;
   transition: background 0.2s ease, transform 0.15s ease;
 }
@@ -80,7 +81,7 @@ body {
 /* 현재 연월 표시 */
 #current-month {
   font-weight: bold;
-  font-size: 24px;       /* 글씨 키움 */
+  font-size: 22px;       /* 글씨 크게 */
   color: #333;
   margin: 5px 0;
 }
@@ -132,13 +133,13 @@ body {
 /* 달력 안의 행사 미리보기 */
 .event-preview {
   display: block;
-  font-size: 11px;       /* 기본 크기 유지 (태블릿/노트북) */
+  font-size: 11px; /* 기본 글씨 크기 유지 */
   color: #444;
   margin-top: 4px;
   padding: 2px 4px;
   border-radius: 6px;
   background: #f9f9f9;
-  word-break: keep-all;
+  word-break: break-word;
 }
 
 /* 행사 상세 박스 */
@@ -207,22 +208,33 @@ body {
 /* 반응형 조정 */
 @media (max-width: 500px) {
   #back-button {
-    padding: 3px 8px; 
-    font-size: 11px;
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  #month-controls button {
+    padding: 4px 8px;
+    font-size: 12px;
   }
   #current-month {
-    font-size: 20px;  /* 모바일에서만 살짝 줄임 */
+    font-size: 24px; /* 모바일에서 글씨 약간 더 키움 */
   }
+  /* 달력 칸과 글씨 크기 조정 */
   #calendar td {
-    height: 60px;
+    height: 50px;
     padding: 3px;
+  }
+  .event-preview {
+    font-size: 8px; /* 모바일에서만 행사 제목 글씨 줄임 */
   }
   #calendar th {
     font-size: 12px;
   }
-  /* 모바일에서 행사 제목 글씨 작게 */
+}
+
+/* 태블릿/노트북에서는 글씨 유지 */
+@media (min-width: 501px) {
   .event-preview {
-    font-size: 9px;
+    font-size: 11px;
   }
 }
 </style>
