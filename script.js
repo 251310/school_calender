@@ -1,6 +1,3 @@
-ㅇㅇ
-
-
 let currentYear = null;
 let currentMonth = 0;
 
@@ -312,5 +309,3 @@ function renderCalendar(){
 
   calendar.appendChild(table);
 }
-
-
