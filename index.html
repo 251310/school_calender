@@ -3,15 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ON-AIR 학교 ㅇ 행사 캘린더</title>
+<title>ON-AIR 학교 행사 캘린더</title>
 <style>
-    /* 전체 배경 & 글씨 */
+/* 전체 배경 & 글씨 */
 body {
   font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   margin: 0;
   padding: 0;
   text-align: center;
   background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  color: #333;
+}
+
+/* 상단 타이틀 */
+#calendar-title {
+  font-size: 28px;
+  margin: 20px 0;
+  font-weight: bold;
+  color: #ff4d6d;
+  text-shadow: 1px 1px 2px rgba(255, 77, 109, 0.2);
+}
+
+/* 달력 컨트롤 버튼 */
+#calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 800px;
+  margin: 0 auto 12px auto;
+  flex-wrap: wrap; /* 모바일에서 줄 바꿈 가능 */
+}
+
+/* 뒤로가기 버튼 컨테이너 */
+#back-container {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+
+/* 뒤로가기 버튼 */
+#back-button {
+  background: #ff4d6d;
+  border: none;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+#back-button:hover {
+  background: #e63950;
+  transform: scale(1.05);
+}
+
+/* 월 컨트롤 */
+#month-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
+#month-controls button {
+  background: #ff4d6d;
+  border: none;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+#month-controls button:hover {
+  background: #e63950;
+  transform: scale(1.05);
+}
+#current-month {
+  font-weight: bold;
+  font-size: 16px;
   color: #333;
 }
 
@@ -54,8 +126,6 @@ body {
   cursor: pointer;
   border-radius: 8px;
 }
-
-/* 토요일, 일요일 */
 .saturday { color: #5c7cfa; font-weight: bold; }
 .sunday, .holiday { color: #ff4d6d; font-weight: bold; }
 
@@ -89,13 +159,11 @@ body {
   margin-bottom: 10px;
 }
 
-/* 상단 타이틀 */
-#calendar-title {
-  font-size: 28px;
-  margin: 20px 0;
-  font-weight: bold;
-  color: #ff4d6d;
-  text-shadow: 1px 1px 2px rgba(255, 77, 109, 0.2);
+/* 안내 텍스트 */
+#hint {
+  font-size: 12px;
+  color: #777;
+  margin: 8px;
 }
 
 /* 연도 선택 화면 */
@@ -135,43 +203,16 @@ body {
   background: #e63950;
 }
 
-/* 달력 컨트롤 버튼 */
-#calendar-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 90%;
-  max-width: 800px;
-  margin: 0 auto 12px auto;
-}
-#month-controls button,
-#back-button {
-  background: #ff4d6d;
-  border: none;
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  margin: 0 6px;
-  font-weight: bold;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-#month-controls button:hover,
-#back-button:hover {
-  background: #e63950;
-  transform: scale(1.05);
-}
-#current-month {
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
-}
-#hint {
-  font-size: 12px;
-  color: #777;
-  margin: 8px;
+/* 모바일 대응 */
+@media (max-width: 500px) {
+  #calendar-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  #back-container {
+    align-self: flex-start;
+    margin-bottom: 6px;
+  }
 }
 </style>
 </head>
@@ -179,15 +220,22 @@ body {
 
 <!-- 달력 화면 -->
 <div id="calendar-container">
-  <div id="calendar-title">ON-AIR 학교 ㅇ 행사 캘린더</div>
+  <div id="calendar-title">ON-AIR 학교 행사 캘린더</div>
+
   <div id="calendar-controls">
-  <button id="back-button" onclick="backToYearSelect()">뒤로가기</button>
-  <div id="month-controls">
-    <button onclick="prevMonth()">◀ 이전 달</button>
-    <span id="current-month">2023년 1월</span>
-    <button onclick="nextMonth()">다음 달 ▶</button>
+    <!-- 뒤로가기 -->
+    <div id="back-container">
+      <button id="back-button" onclick="backToYearSelect()">뒤로가기</button>
+    </div>
+
+    <!-- 이전/다음 달 -->
+    <div id="month-controls">
+      <button onclick="prevMonth()">◀ 이전 달</button>
+      <span id="current-month">2023년 1월</span>
+      <button onclick="nextMonth()">다음 달 ▶</button>
+    </div>
   </div>
-</div>
+
   <div id="hint">날짜를 누르면 자세히 볼 수 있어요!</div>
   <div id="calendar"></div>
 
@@ -199,7 +247,7 @@ body {
 
 <!-- 연도 선택 화면 -->
 <div id="year-select">
-  <h1>ON-AIR 학교 ㅇ 행사 캘린더</h1>
+  <h1>ON-AIR 학교 행사 캘린더</h1>
   <h2>연도를 선택해주세요</h2>
   <button onclick="chooseYear(2023)">2023</button>
   <button onclick="chooseYear(2024)">2024</button>
@@ -207,16 +255,6 @@ body {
   <button onclick="chooseYear(2026)">2026</button>
 </div>
 
-
 <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
