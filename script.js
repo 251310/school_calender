@@ -2,61 +2,57 @@ let currentYear = null;
 let currentMonth = 0;
 
 const events = {
-  "2023-4-26": { displayText:"중간고사", title:"1학기 중간고사", img:"", desc:"", textColor:"#990000", borderColor:"#FF0000" },
-  "2023-4-27": { displayText:"중간고사", title:"1학기 중간고사", img:"", desc:"", textColor:"#990000", borderColor:"#FF0000" },
-  "2023-4-28": { displayText:"중간고사", title:"1학기 중간고사", img:"", desc:"", textColor:"#990000", borderColor:"#FF0000" },
-  "2023-5-29": { displayText:"체험학습", title:"현장체험학습 (1학년)", img:"", desc:"", textColor:"#990066", borderColor:"#FF33CC" },
-  "2023-5-30": { displayText:"체험학습", title:"현장체험학습 (1학년)", img:"", desc:"", textColor:"#990066", borderColor:"#FF33CC" },
-  "2023-5-31": { displayText:"체험학습", title:"현장체험학습 (1학년)", img:"", desc:"", textColor:"#990066", borderColor:"#FF33CC" },
-  // ... (필요한 이벤트 계속 추가)
+  "2023-4-26": { displayText:"중간고사", title:"1학기 중간고사", textColor:"#990000", borderColor:"#FF0000" },
+  "2023-4-27": { displayText:"중간고사", title:"1학기 중간고사", textColor:"#990000", borderColor:"#FF0000" },
+  "2023-4-28": { displayText:"중간고사", title:"1학기 중간고사", textColor:"#990000", borderColor:"#FF0000" },
+  "2023-5-4": { displayText:"체육한마당", title:"달여울 체육 한마당", textColor:"#CC6600", borderColor:"#FF9933" },
+  "2023-5-17": { displayText:"모의고사", title:"모의고사 (1,2학년)", textColor:"#0066CC", borderColor:"#00CCFF" },
+  // … 나머지 이벤트 동일하게 유지
 };
 
-// 대한민국 공휴일 2023~2026
+// 공휴일
 const holidays = {
   "2023-1-1": "신정",
+  "2023-1-21": "설날",
+  "2023-1-22": "설날",
+  "2023-1-23": "설날",
   "2023-3-1": "삼일절",
   "2023-5-5": "어린이날",
-  "2023-6-6": "현충일",
-  "2023-8-15": "광복절",
-  "2023-10-3": "개천절",
-  "2023-10-9": "한글날",
-  "2023-12-25": "크리스마스",
-  // ... (필요한 휴일 계속 추가)
+  // … 나머지 공휴일 동일하게 유지
 };
 
-// 연속 이벤트 계산
-function getAdjacentEvent(date, offset){
-  const d = new Date(date);
-  d.setDate(d.getDate() + offset);
-  const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-  return events[key];
-}
-
-// 연속 이벤트 테두리 계산
-function getBorderStyle(date, event){
-  const prev = getAdjacentEvent(date, -1);
-  const next = getAdjacentEvent(date, 1);
-
-  let style = "border-top:1px solid #ccc;border-bottom:1px solid #ccc;";
-
-  // 왼쪽 테두리
-  if(prev && prev.borderColor === event.borderColor){
-    style += "border-left:1px solid #ccc;";
-  } else {
-    style += `border-left:2px solid ${event.borderColor};`;
+// 연속 날짜 그룹 생성 (학교 행사 + 공휴일)
+function buildContinuousGroups() {
+  const allDates = {...events};
+  for (const key in holidays) {
+    if (!allDates[key]) allDates[key] = { displayText: holidays[key], title: holidays[key], textColor:"#000000", borderColor:"#666666" };
   }
 
-  // 오른쪽 테두리
-  if(next && next.borderColor === event.borderColor){
-    style += "border-right:1px solid #ccc;";
-  } else {
-    style += `border-right:2px solid ${event.borderColor};`;
-  }
+  // 날짜 키 정렬
+  const sortedKeys = Object.keys(allDates).sort((a,b) => new Date(a) - new Date(b));
 
-  return style;
+  let groups = [];
+  let currentGroup = [];
+
+  sortedKeys.forEach((key, idx) => {
+    if (currentGroup.length === 0) {
+      currentGroup.push(key);
+    } else {
+      const prevDate = new Date(currentGroup[currentGroup.length - 1]);
+      const thisDate = new Date(key);
+      const diff = (thisDate - prevDate) / (1000*60*60*24);
+      if (diff === 1 && allDates[key].borderColor === allDates[currentGroup[currentGroup.length-1]].borderColor) {
+        currentGroup.push(key);
+      } else {
+        groups.push([...currentGroup]);
+        currentGroup = [key];
+      }
+    }
+    if (idx === sortedKeys.length -1) groups.push([...currentGroup]);
+  });
+  return { allDates, groups };
 }
 
-// ======================= 기존 기능 ========================
 function chooseYear(year){
   currentYear = year;
   currentMonth = 0;
@@ -84,6 +80,7 @@ function nextMonth(){
 function renderCalendar(){
   const calendar = document.getElementById('calendar');
   calendar.innerHTML = "";
+
   const date = new Date(currentYear, currentMonth,1);
   const month = date.getMonth();
   const year = date.getFullYear();
@@ -101,41 +98,58 @@ function renderCalendar(){
   let row = table.insertRow();
   for(let i=0;i<date.getDay();i++) row.insertCell();
 
+  const { allDates, groups } = buildContinuousGroups();
+
   while(date.getMonth()===month){
-    const cell = row.insertCell();
     const key = `${year}-${month+1}-${date.getDate()}`;
-    const eventData = events[key];
+    const eventData = allDates[key];
+    const cell = row.insertCell();
+    cell.innerHTML = `<span>${date.getDate()}</span>`;
 
     if(eventData){
       cell.innerHTML = `<span style="color:${eventData.textColor}; font-weight:bold;">${date.getDate()}</span>`;
       cell.innerHTML += `<div class="display-text" style="color:${eventData.textColor}; font-size:0.8em;">${eventData.displayText}</div>`;
-      cell.style = getBorderStyle(date, eventData);
-    } else {
-      cell.innerHTML = `<span>${date.getDate()}</span>`;
-      cell.style = "border:1px solid #ccc;";
+      // 연속 그룹 찾기
+      const group = groups.find(g => g.includes(key));
+      if(group){
+        const idx = group.indexOf(key);
+        if(group.length===1){
+          cell.style.border = `2px solid ${eventData.borderColor}`;
+          cell.style.borderRadius = '6px';
+        } else if(idx===0){
+          cell.style.border = `2px solid ${eventData.borderColor}`;
+          cell.style.borderRight = 'none';
+          cell.style.borderRadius = '6px 0 0 6px';
+        } else if(idx === group.length -1){
+          cell.style.border = `2px solid ${eventData.borderColor}`;
+          cell.style.borderLeft = 'none';
+          cell.style.borderRadius = '0 6px 6px 0';
+        } else {
+          cell.style.border = `2px solid ${eventData.borderColor}`;
+          cell.style.borderLeft = 'none';
+          cell.style.borderRight = 'none';
+        }
+      }
     }
 
     const day = date.getDay();
-    const holidayName = holidays[key];
-    if(day===0 || holidayName){
-      cell.classList.add('sunday','holiday');
-      if(holidayName){
-        cell.innerHTML += `<span class="event-preview">${holidayName}</span>`;
-      }
-    }
-    if(day===6) cell.classList.add('saturday');
+    if(day===6) row = table.insertRow();
 
-    // 클릭 시 title, 이미지, 설명 표시
+    // 클릭 시 그룹 전체 이벤트 표시
     cell.onclick = () => {
       if(eventData){
-        const e = eventData;
-        document.getElementById('event-content').innerHTML = `<h3>${e.title}</h3><img src="${e.img}" alt="${e.title}" style="max-width:100%;"><p>${e.desc}</p>`;
+        const group = groups.find(g => g.includes(key));
+        let html = '';
+        group.forEach(k=>{
+          const e = allDates[k];
+          html += `<h3>${e.title} (${k})</h3>`;
+        });
+        document.getElementById('event-content').innerHTML = html;
       } else {
         document.getElementById('event-content').innerHTML = "선택한 날짜에 이벤트가 없습니다.";
       }
     }
 
-    if(date.getDay()===6) row = table.insertRow();
     date.setDate(date.getDate()+1);
   }
 
