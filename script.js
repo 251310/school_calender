@@ -1,3 +1,6 @@
+ㅇㅇ
+
+
 let currentYear = null;
 let currentMonth = 0;
 
@@ -248,26 +251,6 @@ function nextMonth(){
   renderCalendar();
 }
 
-// 연속 날짜 그룹 찾기
-function getGroups(dates, dataObj){
-  dates.sort((a,b)=>new Date(a)-new Date(b));
-  const groups = [];
-  let temp = [];
-  for(let i=0;i<dates.length;i++){
-    const cur = new Date(dates[i]);
-    const prev = i>0 ? new Date(dates[i-1]) : null;
-    const sameColor = prev && dataObj[dates[i]].borderColor === dataObj[dates[i-1]].borderColor;
-    if(prev && ((cur - prev) === 86400000) && sameColor){
-      temp.push(dates[i]);
-    } else {
-      if(temp.length) groups.push(temp);
-      temp = [dates[i]];
-    }
-  }
-  if(temp.length) groups.push(temp);
-  return groups;
-}
-
 function renderCalendar(){
   const calendar = document.getElementById('calendar');
   calendar.innerHTML = "";
@@ -288,87 +271,46 @@ function renderCalendar(){
   let row = table.insertRow();
   for(let i=0;i<date.getDay();i++) row.insertCell();
 
-  // 날짜 전체 배열
-  const allDates = [];
-  const lastDate = new Date(year, month+1, 0).getDate();
-  for(let d=1; d<=lastDate; d++){
-    allDates.push(`${year}-${month+1}-${d}`);
+  while(date.getMonth()===month){
+  const cell = row.insertCell();
+  const key = `${year}-${month+1}-${date.getDate()}`;
+  const eventData = events[key];
+
+  if(eventData){
+    // 날짜와 displayText만 표시
+    cell.innerHTML = `<span style="color:${eventData.textColor}; font-weight:bold;">${date.getDate()}</span>`;
+    cell.innerHTML += `<div class="display-text" style="color:${eventData.textColor}; font-size:0.8em;">${eventData.displayText}</div>`;
+    cell.style.border = `2px solid ${eventData.borderColor}`;
+  } else {
+    cell.innerHTML = `<span>${date.getDate()}</span>`;
   }
 
-  // 학교 행사 + 공휴일 합치기
-  const combinedData = {};
-  allDates.forEach(key=>{
-    if(events[key]){
-      combinedData[key] = events[key];
-    } else if(holidays[key]){
-      combinedData[key] = { displayText: holidays[key], title: holidays[key], img:"", desc:"", textColor:"#FF0000", borderColor:"#FF0000" };
+  const day = date.getDay();
+  const holidayName = holidays[key];
+  if(day===0 || holidayName){
+    cell.classList.add('sunday','holiday');
+    if(holidayName){
+      cell.innerHTML += `<span class="event-preview">${holidayName}</span>`;
     }
-  });
+  }
+  if(day===6) cell.classList.add('saturday');
 
-  const groups = getGroups(Object.keys(combinedData), combinedData);
-
-  // 셀 생성
-  for(let d=1; d<=lastDate; d++){
-    const cellDate = `${year}-${month+1}-${d}`;
-    const eventData = combinedData[cellDate];
-
-    // 그룹 안에서 위치 찾기
-    let groupInfo = null;
-    for(let g of groups){
-      const idx = g.indexOf(cellDate);
-      if(idx !== -1){
-        groupInfo = { group:g, idx:idx };
-        break;
-      }
-    }
-
-    const cell = row.insertCell();
-    cell.innerHTML = `<span>${d}</span>`;
+  // 클릭 시 title, 이미지, 설명 표시
+  cell.onclick = () => {
     if(eventData){
-      cell.innerHTML = `<span style="color:${eventData.textColor}; font-weight:bold;">${d}</span>`;
-      cell.innerHTML += `<div class="display-text" style="color:${eventData.textColor}; font-size:0.8em;">${eventData.displayText}</div>`;
-      
-      // 테두리 설정
-      if(groupInfo){
-        const g = groupInfo.group;
-        const idx = groupInfo.idx;
-        if(g.length===1){
-          cell.style.border = `2px solid ${eventData.borderColor}`;
-          cell.style.borderRadius = '6px';
-        } else if(idx===0){
-          cell.style.borderTop = `2px solid ${eventData.borderColor}`;
-          cell.style.borderBottom = `2px solid ${eventData.borderColor}`;
-          cell.style.borderLeft = `2px solid ${eventData.borderColor}`;
-          cell.style.borderRight = 'none';
-          cell.style.borderRadius = '6px 0 0 6px';
-        } else if(idx===g.length-1){
-          cell.style.borderTop = `2px solid ${eventData.borderColor}`;
-          cell.style.borderBottom = `2px solid ${eventData.borderColor}`;
-          cell.style.borderLeft = 'none';
-          cell.style.borderRight = `2px solid ${eventData.borderColor}`;
-          cell.style.borderRadius = '0 6px 6px 0';
-        } else {
-          cell.style.borderTop = `2px solid ${eventData.borderColor}`;
-          cell.style.borderBottom = `2px solid ${eventData.borderColor}`;
-          cell.style.borderLeft = 'none';
-          cell.style.borderRight = 'none';
-        }
-      }
+      const e = eventData;
+      document.getElementById('event-content').innerHTML = `<h3>${e.title}</h3><img src="${e.img}" alt="${e.title}" style="max-width:100%;"><p>${e.desc}</p>`;
+    } else {
+      document.getElementById('event-content').innerHTML = "선택한 날짜에 이벤트가 없습니다.";
     }
-
-    // 클릭 시 title, 이미지, 설명 표시
-    cell.onclick = () => {
-      if(eventData){
-        const e = eventData;
-        document.getElementById('event-content').innerHTML = `<h3>${e.title}</h3><img src="${e.img}" alt="${e.title}" style="max-width:100%;"><p>${e.desc}</p>`;
-      } else {
-        document.getElementById('event-content').innerHTML = "선택한 날짜에 이벤트가 없습니다.";
-      }
-    }
-
-    if(date.getDay()===6) row = table.insertRow();
-    date.setDate(date.getDate()+1);
   }
+
+  if(date.getDay()===6) row = table.insertRow();
+  date.setDate(date.getDate()+1);
+}
+
 
   calendar.appendChild(table);
 }
+
+
